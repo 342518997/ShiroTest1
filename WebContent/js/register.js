@@ -4,31 +4,50 @@ function register(){
 		
 		var password2=$("#password2").val();
 		
+		var userName=$("#userName").val();
+		
+		if(userName==null||userName==''){
+			
+			alert("请输入账号！");
+			
+			return false;
+		}	 	
+		
+		if(password==null||password==''){
+			
+			alert("请输入密码！");
+			
+			return false;
+		}
+		
 		if(password!=password2){
 			
 			alert("两次输入的密码不一样！");
 			
 			return false;
 		}
-		$.get("register",//后台url
-				{"userName":$("#userName").val(),"password":$("#password").val(),"roleId":$("#roleId").val(),"salt":$("#salt").val()},//传送到后台的参数
-				function(data){//成功后的回调函数
+		$.ajax({
+			url:"register",
+			type:"post",
+			data:{"userName":$("#userName").val(),"password":$("#password").val(),"roleId":$("#roleId").val(),"salt":$("#salt").val()},//传送到后台的参数
+			success:function(data){
+				data=$.parseJSON(data);
+				if(data.boole){
 					
-					if(data){
-						
-						alert("注册成功!");
-						
-						$(location).attr('href', "login.jsp");
-						
-					}else{
-						
-						alert("注册失败!");
-						
-					}
-			
-				},
-				
-				"json");
+					alert(data.userName);
+					
+					$(location).attr('href', "logi.html");
+					
+				}else{
+					
+					alert(data.userName);
+					
+				}
+			},
+		     error:function(e){
+	                alert("错误！！");	                    
+	            }		
+		});
 		
 	}
 
@@ -37,8 +56,7 @@ function reloadValidateCode(){
 	$("#validateCodeImg").attr("src","validateCode?data=" + new Date() + Math.floor(Math.random()*24));
 
 }
-
-function login(){
+function login(){	
 	$.ajax({
 		url:"login",
 		type:"post",
@@ -60,7 +78,6 @@ function login(){
 		},
 	     error:function(e){
                 alert("错误！！");	                    
-            }
-		
+            }		
 	});
 }

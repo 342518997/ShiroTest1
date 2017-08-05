@@ -140,49 +140,40 @@ public class TuserControllers {
 	
 	//注册
 	@RequestMapping("/register")
-	public void Stdent(Tuser tuser,HttpServletResponse response){
+	public void Stdent(Tuser tuser,HttpServletResponse response) throws IOException{
 		
-		Tuser tuser2=EndecryptUtils.EncryptUser(tuser);
+		Tuser user=service.Login(tuser.getUserName());
 		
-		PrintWriter out=null;
+		PrintWriter out=response.getWriter();
 		
-		int row=service.addRegister(tuser2);
+		JSONObject json = new JSONObject();
 		
-		if(row>0){
+		if(user!=null){
 			
-			try {
-				
-				 out=response.getWriter();
-				 
-				 out.println(true);
-				
-			} catch (IOException e) {
-				
-				// TODO Auto-generated catch block
-				
-				e.printStackTrace();
-			}
-						
+			json.element("boole", false);
+			
+			json.element("userName", "账号已经注册了!");		
+					
 		}else{
 			
-			 try {
-				 
-				out=response.getWriter();
+			Tuser tuser2=EndecryptUtils.EncryptUser(tuser);
+						
+			int row=service.addRegister(tuser2);
+			
+			if(row>0){
 				
-				out.println(false);
+				json.element("boole", true);
 				
-				System.out.println("注册失败");
-				
-			} catch (IOException e) {
-				
-				// TODO Auto-generated catch block
-				
-				e.printStackTrace();
+				json.element("userName", "注册成功!");
 				
 			}
-			 			
+			
 		}
-				
+		
+		out.println(json);
+		
+		out.close();
+						
 	}
 	
 	//生成验证码

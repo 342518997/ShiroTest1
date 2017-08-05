@@ -34,7 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				data:{userName:$("#userName").val(),password:$("#password").val(),verification:$("#verification").val()},
 				success:function(data){
 					data=$.parseJSON(data);
-					alert(data);
+					alert(data.errorMsg);
 				},
 			     error:function(e){
 	                    alert("错误！！");
