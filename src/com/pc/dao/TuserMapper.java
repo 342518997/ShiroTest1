@@ -5,7 +5,7 @@ import java.util.Set;
 import org.springframework.stereotype.Repository;
 import com.pc.model.Tuser;
 /**
- * @author asus 用户登录 授权 接口
+ * @author 彭冲 用户登录 授权 接口
  */
 @Repository("UsersMapper")
 public interface TuserMapper {
