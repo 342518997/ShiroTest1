@@ -32,7 +32,7 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
 /**
- * @author asus µÇÂ¼ ×¢²á ÊÚÈ¨ ¿ØÖÆÆ÷
+ * @author asus ç™»å½• æ³¨å†Œ æˆæƒ æ§åˆ¶å™¨
  *
  */
 @Controller
@@ -42,68 +42,80 @@ public class TuserControllers {
 	@Resource
 	private TuserService service;
 	
-	//µÇÂ¼
+	//ç™»å½•
 	@RequestMapping("/login")
 	public void Login(Tuser user,String verification, HttpServletRequest request,HttpServletResponse response) throws IOException {
-		
-		String errorMsg = null;
+
+		HttpSession session=request.getSession();
+
+		String errorMsg = "";
 		
 		boolean account=false;
 		
 		JSONObject json = new JSONObject();
 		
-		HttpSession session=request.getSession();
-		
 		PrintWriter out =response.getWriter();
+
+        Tuser user1 = (Tuser) session.getAttribute(user.getUserName());
 		
-		//ÄÃµ½ÑéÖ¤Âë
+		//æ‹¿åˆ°éªŒè¯ç 
 		
 		String code = (String) request.getSession().getAttribute("validateCode");
 		
-		//ÄÃµ½ÓÃ»§ÊäÈëµÄÑéÖ¤Âë
+		//æ‹¿åˆ°ç”¨æˆ·è¾“å…¥çš„éªŒè¯ç 
 		
 		String submitCode =(String) WebUtils.getCleanParam(request, "verification");
 		
 		
-		//ÅĞ¶ÏÑéÖ¤Âë
+		//åˆ¤æ–­éªŒè¯ç 
 		
 		if(code == null || !code.equals(submitCode)){
 			
-			errorMsg = "ÑéÖ¤Âë´íÎó£¡";
+			errorMsg = "éªŒè¯ç é”™è¯¯ï¼";
 						
-		}else if(code.equals(submitCode)){
-			
-			Subject subject = SecurityUtils.getSubject();	 
-			
-			UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassword());
-					
-			try {
-				
-				subject.login(token);
-				
-			} catch (UnknownAccountException e) {
-				
-				errorMsg = "ÓÃ»§Ãû»òÃÜÂë´íÎó£¡";
-				
-				account=true;
-				
-			} catch (IncorrectCredentialsException e) {
-				
-				errorMsg = "ÓÃ»§Ãû»òÃÜÂë´íÎó£¡";
-				
-			} catch (ExcessiveAttemptsException e) {
-				
-				errorMsg = "µÇÂ¼Ê§°Ü¶à´Î£¬ÕË»§Ëø¶¨10·ÖÖÓ";
+		}else if(code.equals(submitCode)) {
 
-			} catch (AuthenticationException e) {
-				
-				errorMsg = "ÆäËû´íÎó" + e.getMessage();
-				
-			}
-			
-		}	
-						
-		if (errorMsg != null) {
+                Subject subject = SecurityUtils.getSubject();
+
+                UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassword());
+
+                try {
+
+                    subject.login(token);
+
+                } catch (UnknownAccountException e) {
+
+                    errorMsg = "ç”¨æˆ·åæˆ–å¯†ç é”™è¯¯ï¼";
+
+                    account = true;
+
+                } catch (IncorrectCredentialsException e) {
+
+                    errorMsg = "ç”¨æˆ·åæˆ–å¯†ç é”™è¯¯ï¼";
+
+                } catch (ExcessiveAttemptsException e) {
+
+                    errorMsg = "ç™»å½•å¤±è´¥å¤šæ¬¡ï¼Œè´¦æˆ·é”å®š10åˆ†é’Ÿ";
+
+                } catch (AuthenticationException e) {
+
+                    errorMsg = "å…¶ä»–é”™è¯¯" + e.getMessage();
+
+                }
+
+            //åˆ¤æ–­è´¦å·æ˜¯å¦å·²ç»ç™»å½•
+
+            if (errorMsg == "" && user1 != null && user.getUserName().equals(user1.getUserName())) {
+
+                errorMsg = "è´¦å·å·²ç»ç™»å½•ï¼Œè¯·å‹¿é‡å¤ç™»å½•ï¼";
+
+                account = true;
+
+            }
+
+        }
+
+		if (errorMsg != null && errorMsg != "") {
 						
 			if(code.equals(submitCode) && !account){
 									
@@ -111,13 +123,11 @@ public class TuserControllers {
 				
 				if(temp > 0){
 										
-					json.element("row", "»¹¿ÉÒÔµÇÂ¼:"+temp+"´Î!");
+					json.element("row", "è¿˜å¯ä»¥ç™»å½•:"+temp+"æ¬¡!");
 					
 				}
 				
 			}
-			
-			
 			
 			json.element("booe", false);
 			
@@ -130,7 +140,7 @@ public class TuserControllers {
 			
 			json.element("booe", true);
 			
-			session.setAttribute("user", user);
+			session.setAttribute(user.getUserName(), user);
 					
 			out.println(json);
 			
@@ -138,7 +148,7 @@ public class TuserControllers {
 				
 	}
 	
-	//×¢²á
+	//æ³¨å†Œ
 	@RequestMapping("/register")
 	public void Stdent(Tuser tuser,HttpServletResponse response) throws IOException{
 		
@@ -152,7 +162,7 @@ public class TuserControllers {
 			
 			json.element("boole", false);
 			
-			json.element("userName", "ÕËºÅÒÑ¾­×¢²áÁË!");		
+			json.element("userName", "è´¦å·å·²ç»æ³¨å†Œäº†!");		
 					
 		}else{
 			
@@ -164,7 +174,7 @@ public class TuserControllers {
 				
 				json.element("boole", true);
 				
-				json.element("userName", "×¢²á³É¹¦!");
+				json.element("userName", "æ³¨å†ŒæˆåŠŸ!");
 				
 			}
 			
@@ -176,7 +186,7 @@ public class TuserControllers {
 						
 	}
 	
-	//Éú³ÉÑéÖ¤Âë
+	//ç”ŸæˆéªŒè¯ç 
 	
     @RequestMapping(value = "/validateCode")    
     public void validateCode(HttpServletRequest request, HttpServletResponse response) throws IOException {        
@@ -194,16 +204,16 @@ public class TuserControllers {
    
     }
     
-    //»ñÈ¡µÇÂ¼¶ÔÏó
+    //è·å–ç™»å½•å¯¹è±¡
     
     @RequestMapping(value = "/Byusername")
-    public void Byusername(HttpServletResponse response,HttpServletRequest request) throws IOException{
+    public void Byusername(String userName,HttpServletResponse response,HttpServletRequest request) throws IOException{
     	
     	HttpSession session = request.getSession();
     	
     	PrintWriter out = response.getWriter();
     	    	   	
-    	Tuser user = (Tuser)session.getAttribute("user");
+    	Tuser user = (Tuser)session.getAttribute(userName);
     	
     	JSONObject json = new JSONObject();
     	
