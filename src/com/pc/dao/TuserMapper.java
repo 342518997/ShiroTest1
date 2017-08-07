@@ -5,19 +5,19 @@ import java.util.Set;
 import org.springframework.stereotype.Repository;
 import com.pc.model.Tuser;
 /**
- * @author 彭冲 用户登录 授权 接口
+ * @author 褰啿 鐢ㄦ埛鐧诲綍 鎺堟潈 鎺ュ彛
  */
 @Repository("UsersMapper")
 public interface TuserMapper {
-	// 根据账号查询登录
+	// 鏍规嵁璐﹀彿鏌ヨ鐧诲綍
 	Tuser Login(String username);
 
-	// 根据账号查询角色信息
+	// 鏍规嵁璐﹀彿鏌ヨ瑙掕壊淇℃伅
 	Set<String> RoleName(String username);
 
-	// 根据账号查询权限信息
+	// 鏍规嵁璐﹀彿鏌ヨ鏉冮檺淇℃伅
 	Set<String> PermissionName(String username);
 	
-	//注册账号
+	//娉ㄥ唽璐﹀彿
 	int addRegister(Tuser tuser);
 }

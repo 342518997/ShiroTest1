@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -48,6 +49,8 @@ public class TuserControllers {
 
 		HttpSession session=request.getSession();
 
+		ServletContext application = request.getSession().getServletContext();
+
 		String errorMsg = "";
 		
 		boolean account=false;
@@ -57,6 +60,8 @@ public class TuserControllers {
 		PrintWriter out =response.getWriter();
 
         Tuser user1 = (Tuser) session.getAttribute(user.getUserName());
+
+		Tuser user2 = (Tuser) application.getAttribute(user.getUserName());
 		
 		//拿到验证码
 		
@@ -111,7 +116,13 @@ public class TuserControllers {
 
                 account = true;
 
-            }
+            }else if(errorMsg == "" && user2 != null && user.getUserName().equals(user2.getUserName())){
+
+				errorMsg = "账号已在别处登录,是否强制登录!";
+
+				account = true;
+
+			}
 
         }
 
@@ -139,6 +150,8 @@ public class TuserControllers {
 		}else{
 			
 			json.element("booe", true);
+
+			application.setAttribute(user.getUserName(),user);
 			
 			session.setAttribute(user.getUserName(), user);
 					
