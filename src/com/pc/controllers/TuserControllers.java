@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -118,7 +119,30 @@ public class TuserControllers {
 
             }else if(errorMsg == "" && user2 != null && user.getUserName().equals(user2.getUserName())){
 
-				errorMsg = "账号已在别处登录,是否强制登录!";
+				//获取ip地址
+
+                //获取ip地址
+                String locaip = request.getHeader("x- forwarding  -for");
+
+                if(request.getHeader("x- forwarding  -for")== null){
+
+                    locaip = request.getRemoteAddr();
+
+                }
+
+					if (locaip.equals(user2.getLocaip())) {
+
+						session.setAttribute(user.getUserName(),user);
+
+                        json.element("booe", true);
+
+                        out.println(json);
+
+                        return;
+
+					}
+
+				errorMsg = "账号已经登录,是否登录?";
 
 				account = true;
 
@@ -148,13 +172,22 @@ public class TuserControllers {
 		
 			
 		}else{
-			
-			json.element("booe", true);
+			//获取ip地址
+            String locaip = request.getHeader("x- forwarding  -for");
+
+            if(request.getHeader("x- forwarding  -for")== null){
+
+                locaip = request.getRemoteAddr();
+            }
+
+            user.setLocaip(locaip);
+
+            json.element("booe", true);
 
 			application.setAttribute(user.getUserName(),user);
-			
+
 			session.setAttribute(user.getUserName(), user);
-					
+
 			out.println(json);
 			
 		}

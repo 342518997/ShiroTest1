@@ -68,7 +68,7 @@ function login(){/*登录*/
 				if(data.row!=null){
 					alert(data.errorMsg+""+data.row);
 				}else{
-					if(data.errorMsg=="账号已在别处登录,是否强制登录!"){
+					if(data.errorMsg=="账号已经登录,是否登录?"){
 						if(window.confirm(data.errorMsg)){
 							alert("强制登录");
 						}
