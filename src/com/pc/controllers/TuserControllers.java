@@ -4,34 +4,29 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.InetAddress;
-
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.pc.model.Tuser;
 import com.pc.service.TuserService;
 import com.pc.util.EndecryptUtils;
 import com.pc.util.ValidateCode;
-
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
 
 /**
  * @author asus 登录 注册 授权 控制器
@@ -43,7 +38,7 @@ public class TuserControllers {
 	
 	@Resource
 	private TuserService service;
-	
+
 	//登录
 	@RequestMapping("/login")
 	public void Login(Tuser user,String verification, HttpServletRequest request,HttpServletResponse response) throws IOException {
@@ -63,7 +58,8 @@ public class TuserControllers {
         Tuser user1 = (Tuser) session.getAttribute(user.getUserName());
 
 		Tuser user2 = (Tuser) application.getAttribute(user.getUserName());
-		
+
+
 		//拿到验证码
 		
 		String code = (String) request.getSession().getAttribute("validateCode");
@@ -81,9 +77,11 @@ public class TuserControllers {
 						
 		}else if(code.equals(submitCode)) {
 
-                Subject subject = SecurityUtils.getSubject();
+			 Subject subject = SecurityUtils.getSubject();
 
-                UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassword());
+			 Session sessionshiro = subject.getSession();
+
+			UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassword());
 
                 try {
 
@@ -183,10 +181,11 @@ public class TuserControllers {
             user.setLocaip(locaip);
 
             json.element("booe", true);
-
+/*
 			application.setAttribute(user.getUserName(),user);
 
-			session.setAttribute(user.getUserName(), user);
+			session.setAttribute(user.getUserName(), user);*/
+
 
 			out.println(json);
 			

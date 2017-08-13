@@ -10,6 +10,7 @@ import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.cache.Cache;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
@@ -18,44 +19,59 @@ import com.pc.model.Tuser;
 import com.pc.service.TuserService;
 
 
-
 /**
- * @author Åí³å  shiro Éí·İÈÏÖ¤ÊÚÈ¨
+ * @author å½­å†²  shiro èº«ä»½è®¤è¯æˆæƒ
  *
  */
 public class MyRealm extends AuthorizingRealm{
+
 	@Resource
 	private TuserService service;
-	//ÊÚÈ¨
+
+
+	//æˆæƒ
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
 		// TODO Auto-generated method stub
-		//»ñÈ¡µ±Ç°ÓÃ»§
+		if(principalCollection == null){
+
+			return null;
+
+		}
 		String username=(String)principalCollection.getPrimaryPrincipal();
+
 		SimpleAuthorizationInfo authorizationInfo=new SimpleAuthorizationInfo();
-		//ÉèÖÃ½ÇÉ«
+		//è®¾ç½®è§’è‰²
 		authorizationInfo.setRoles(service.RoleName(username));
-		//ÉèÖÃÈ¨ÏŞ
+		//è®¾ç½®æƒé™
 		authorizationInfo.setStringPermissions(service.PermissionName(username));
+
 		return authorizationInfo;
 	}
-	//Éí·İÈÏÖ¤
+	//èº«ä»½è®¤è¯
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 		// TODO Auto-generated method stub
 		String username=(String)token.getPrincipal();
 		Tuser user=service.Login(username);
 		if(user==null){
-			 throw new UnknownAccountException("ÕËºÅÃÜÂë´íÎó!");			
+			 throw new UnknownAccountException("è´¦å·å¯†ç é”™è¯¯!");			
 		}
-		//ÃÜÂëÆ¥Åä
+		//å¯†ç åŒ¹é…
 		AuthenticationInfo authenticationInfo=new SimpleAuthenticationInfo(user.getUserName(), user.getPassword(),
 				ByteSource.Util.bytes(user.getSalt()),getName());
+
 		return authenticationInfo;
 		
 	}
-
-	
-
-
+	//æ¸…é™¤æˆæƒçš„ç¼“å­˜
+	@Override
+	protected void clearCachedAuthorizationInfo(PrincipalCollection principals) {
+		super.clearCachedAuthorizationInfo(principals);
+	}
+	//æ¸…é™¤ç™»å½•çš„ç¼“å­˜
+	@Override
+	protected void clearCachedAuthenticationInfo(PrincipalCollection principals) {
+		super.clearCachedAuthenticationInfo(principals);
+	}
 }

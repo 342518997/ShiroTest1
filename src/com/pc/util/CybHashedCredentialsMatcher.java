@@ -1,9 +1,12 @@
 package com.pc.util;
 
+import com.pc.model.Tuser;
+import com.pc.service.TuserService;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -11,41 +14,44 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * @author asus ÃÜÂëÆ¥Åä
+ * @author asus å¯†ç åŒ¹é…
  *
  */
 public class CybHashedCredentialsMatcher extends HashedCredentialsMatcher {
 
-	// ´´½¨»º´æµÄ¶ÔÏó
+	// åˆ›å»ºç¼“å­˜çš„å¯¹è±¡
 	
 	private Cache<String, AtomicInteger> passwordRetryCache;
-	
-	//¶ÁÈ¡ ehcache.xmlÀïµÄÅäÖÃ ³õÊ¼»¯session
+
+
+	//è¯»å– ehcache.xmlé‡Œçš„é…ç½® åˆå§‹åŒ–session
 	
 	public CybHashedCredentialsMatcher(CacheManager cacheManager) {
 
 		passwordRetryCache = cacheManager.getCache("passwordRetryCache");
-		
+
+
 	}
 
-	// Æ¥ÅäÃÜÂë
+	// åŒ¹é…å¯†ç 
 	
 	@Override
 	public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
 
-		// ÄÃµ½ÕËºÅ
+		// æ‹¿åˆ°è´¦å·
 
 		String userName = (String) token.getPrincipal();
 
-		// ÅĞ¶ÏµÇÂ¼´ÎÊı
+		// åˆ¤æ–­ç™»å½•æ¬¡æ•°
 
 		AtomicInteger retryCount = passwordRetryCache.get(userName);
 		
-		// µÇÂ¼´íÎóÒ»´Î retryCount + 1
+		// ç™»å½•é”™è¯¯ä¸€æ¬¡ retryCount + 1
 
 		if (retryCount == null) {
 
@@ -55,30 +61,30 @@ public class CybHashedCredentialsMatcher extends HashedCredentialsMatcher {
 
 		}
 		
-		//»ñÈ¡ request¶ÔÏó
+		//è·å– requestå¯¹è±¡
 		
 		HttpServletRequest request = ((ServletRequestAttributes)
 				RequestContextHolder.getRequestAttributes()).getRequest();
 		
-		//»ñÈ¡ Session¶ÔÏó
+		//è·å– Sessionå¯¹è±¡
 		
 		HttpSession session = request.getSession();
 		
-		//±£´æµÇÂ¼´ÎÊı
+		//ä¿å­˜ç™»å½•æ¬¡æ•°
 		
 		session.setAttribute("userName", 5-retryCount.get());
 		
-		// ³¬¹ı5´Î ËøÕËºÅ
+		// è¶…è¿‡5æ¬¡ é”è´¦å·
 
 		if (retryCount.incrementAndGet() > 5) {
 
-			// Å×³öÕËºÅËø¶¨Òì³£
+			// æŠ›å‡ºè´¦å·é”å®šå¼‚å¸¸
 
 			throw new ExcessiveAttemptsException();
 
 		}
 		
-		// µÇÂ¼³É¹¦ ÒÆ³ı»º´æ
+		// ç™»å½•æˆåŠŸ ç§»é™¤ç¼“å­˜
 
 		boolean matches = super.doCredentialsMatch(token, info);
 
@@ -90,4 +96,6 @@ public class CybHashedCredentialsMatcher extends HashedCredentialsMatcher {
 		
 		return matches;
 	}
+
+
 }
