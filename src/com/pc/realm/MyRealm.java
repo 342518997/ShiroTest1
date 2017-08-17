@@ -69,9 +69,5 @@ public class MyRealm extends AuthorizingRealm{
 	protected void clearCachedAuthorizationInfo(PrincipalCollection principals) {
 		super.clearCachedAuthorizationInfo(principals);
 	}
-	//清除登录的缓存
-	@Override
-	protected void clearCachedAuthenticationInfo(PrincipalCollection principals) {
-		super.clearCachedAuthenticationInfo(principals);
-	}
+
 }
