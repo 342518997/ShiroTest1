@@ -74,10 +74,13 @@
         <!-- Shiro连接约束配置,即过滤链的定义 -->
         <property name="filterChainDefinitions">
             <value>
+                <!--普通用户-->
                 /login=anon
-                /admin*=authc
-                /student=roles[teacher]
-                /teacher=perms["user:create"]
+                /domestic*=authc
+                <!--管理员-->
+                /student=perms[user:admin]
+                <!--超级管理员-->
+                /teacher=roles[administrator]
             </value>
         </property>
     </bean>
@@ -112,13 +115,14 @@
     <!-- 配置Session DAO的操作处理 -->
     <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
         <!-- 设置session缓存的名字，这个名字可以任意 -->
-        <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>
+        <property name="activeSessionsCacheName" value="loginCache"/>
         <!-- 定义该Session DAO操作中所使用的ID生成器 -->
         <property name="sessionIdGenerator" ref="sessionIdGenerator"/>
     </bean>
     <!-- 配置需要向Cookie中保存数据的配置模版 -->
     <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-        <!-- 在Tomcat运行下默认使用的Cookie的名字为JSESSIONID --> <constructor-arg value="mldn-session-id"/>
+        <!-- 在Tomcat运行下默认使用的Cookie的名字为JSESSIONID -->
+        <constructor-arg value="JID"/>
         <!-- 保证该系统不会受到跨域的脚本操作供给 -->
         <property name="httpOnly" value="true"/>
         <!-- 定义Cookie的过期时间，单位为秒，如果设置为-1表示浏览器关闭，则Cookie消失 -->

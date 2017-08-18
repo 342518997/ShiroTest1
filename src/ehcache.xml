@@ -5,7 +5,7 @@
     <!-- 磁盘缓存位置 -->
     <diskStore path="java.io.tmpdir"/>
     <!--默認配置-->
-    <defaultCache
+<!--    <defaultCache
             maxElementsInMemory="10000"
             maxElementsOnDisk="0"
             eternal="true"
@@ -16,7 +16,7 @@
             diskSpoolBufferSizeMB="50"
             diskExpiryThreadIntervalSeconds="120"
             memoryStoreEvictionPolicy="LFU"
-    />
+    />-->
 
     <!-- 登录记录缓存 锁定10分钟 -->
     <cache name="passwordRetryCache" eternal="false"

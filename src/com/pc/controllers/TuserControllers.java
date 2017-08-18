@@ -43,7 +43,9 @@ public class TuserControllers {
 	@RequestMapping("/login")
 	public void Login(Tuser user,String verification, HttpServletRequest request,HttpServletResponse response) throws IOException {
 
-		HttpSession session=request.getSession();
+		Subject subject = SecurityUtils.getSubject();
+
+		Session session=subject.getSession(false);
 
 		ServletContext application = request.getSession().getServletContext();
 
@@ -76,10 +78,6 @@ public class TuserControllers {
 			errorMsg = "验证码错误！";
 						
 		}else if(code.equals(submitCode)) {
-
-			 Subject subject = SecurityUtils.getSubject();
-
-			 Session sessionshiro = subject.getSession();
 
 			UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassword());
 
@@ -117,16 +115,9 @@ public class TuserControllers {
 
             }else if(errorMsg == "" && user2 != null && user.getUserName().equals(user2.getUserName())){
 
-				//获取ip地址
-
                 //获取ip地址
-                String locaip = request.getHeader("x- forwarding  -for");
+                String locaip = subject.getSession().getHost();
 
-                if(request.getHeader("x- forwarding  -for")== null){
-
-                    locaip = request.getRemoteAddr();
-
-                }
 
 					if (locaip.equals(user2.getLocaip())) {
 
@@ -171,21 +162,25 @@ public class TuserControllers {
 			
 		}else{
 			//获取ip地址
-            String locaip = request.getHeader("x- forwarding  -for");
-
-            if(request.getHeader("x- forwarding  -for")== null){
-
-                locaip = request.getRemoteAddr();
-            }
+            String locaip =  subject.getSession().getHost();
 
             user.setLocaip(locaip);
 
             json.element("booe", true);
+
 			application.setAttribute(user.getUserName(),user);
 
 			session.setAttribute(user.getUserName(), user);
 
 
+
+	/*		System.out.println("SESSION ID = " + SecurityUtils.getSubject().getSession().getId());
+			System.out.println("用户名：" + SecurityUtils.getSubject().getPrincipal());
+			System.out.println("HOST：" + SecurityUtils.getSubject().getSession().getHost());
+			System.out.println("TIMEOUT ：" + SecurityUtils.getSubject().getSession().getTimeout());
+			System.out.println("START：" + SecurityUtils.getSubject().getSession().getStartTimestamp());
+			System.out.println("LAST：" + SecurityUtils.getSubject().getSession().getLastAccessTime());
+*/
 			out.println(json);
 			
 		}
@@ -251,9 +246,9 @@ public class TuserControllers {
     //获取登录对象
     
     @RequestMapping(value = "/Byusername")
-    public void Byusername(String userName,HttpServletResponse response,HttpServletRequest request) throws IOException{
+    public void Byusername(String userName,HttpServletResponse response) throws IOException{
     	
-    	HttpSession session = request.getSession();
+    	Session session = SecurityUtils.getSubject().getSession();
     	
     	PrintWriter out = response.getWriter();
     	    	   	
