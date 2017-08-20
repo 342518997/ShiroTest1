@@ -3,7 +3,7 @@ package com.pc.test;
 
 /**
  * 
- * @author asus Åí³å
+ * @author asus å½­å†²
  *  
  */
 public class SortTest {
@@ -22,7 +22,7 @@ public class SortTest {
 		int size = end;
 		int arrt = numbers[start];
 		while(size>start){
-			//´ÓºóÍùÇ°±È½Ï
+			//ä»åå¾€å‰æ¯”è¾ƒ
 			while(size>start&&numbers[size]>=arrt){
 				size--;
 				if(numbers[size]<=arrt){
@@ -32,7 +32,7 @@ public class SortTest {
 				}
 				
 			}
-			//´ÓÇ°Íùºó±È½Ï
+			//ä»å‰å¾€åæ¯”è¾ƒ
 			while(size>start&&numbers[start]<=arrt){
 				start++;
 				if(numbers[start]>=arrt){
@@ -46,9 +46,9 @@ public class SortTest {
 			System.out.println(start+ " " +low);
 			System.out.println(size+" "+end);
 			System.out.println("");
-		 //´ËÊ±µÚÒ»´ÎÑ­»·±È½Ï½áÊø£¬¹Ø¼üÖµµÄÎ»ÖÃÒÑ¾­È·¶¨ÁË¡£×ó±ßµÄÖµ¶¼±È¹Ø¼üÖµĞ¡£¬ÓÒ±ßµÄÖµ¶¼±È¹Ø¼üÖµ´ó£¬
-		 //µ«ÊÇÁ½±ßµÄË³Ğò»¹ÓĞ¿ÉÄÜÊÇ²»Ò»ÑùµÄ£¬½øĞĞÏÂÃæµÄµİ¹éµ÷ÓÃ
-		 //µİ¹é
+		 //æ­¤æ—¶ç¬¬ä¸€æ¬¡å¾ªç¯æ¯”è¾ƒç»“æŸï¼Œå…³é”®å€¼çš„ä½ç½®å·²ç»ç¡®å®šäº†ã€‚å·¦è¾¹çš„å€¼éƒ½æ¯”å…³é”®å€¼å°ï¼Œå³è¾¹çš„å€¼éƒ½æ¯”å…³é”®å€¼å¤§ï¼Œ
+		 //ä½†æ˜¯ä¸¤è¾¹çš„é¡ºåºè¿˜æœ‰å¯èƒ½æ˜¯ä¸ä¸€æ ·çš„ï¼Œè¿›è¡Œä¸‹é¢çš„é€’å½’è°ƒç”¨
+		 //é€’å½’
 		if(start>low){
 			Sort(numbers, low, end-1);
 		}

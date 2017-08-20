@@ -47,8 +47,6 @@ public class TuserControllers {
 
 		Session session=subject.getSession(false);
 
-		ServletContext application = request.getSession().getServletContext();
-
 		String errorMsg = "";
 		
 		boolean account=false;
@@ -58,9 +56,6 @@ public class TuserControllers {
 		PrintWriter out =response.getWriter();
 
         Tuser user1 = (Tuser) session.getAttribute(user.getUserName());
-
-		Tuser user2 = (Tuser) application.getAttribute(user.getUserName());
-
 
 		//拿到验证码
 		
@@ -113,29 +108,7 @@ public class TuserControllers {
 
                 account = true;
 
-            }else if(errorMsg == "" && user2 != null && user.getUserName().equals(user2.getUserName())){
-
-                //获取ip地址
-                String locaip = subject.getSession().getHost();
-
-
-					if (locaip.equals(user2.getLocaip())) {
-
-						session.setAttribute(user.getUserName(),user);
-
-                        json.element("booe", true);
-
-                        out.println(json);
-
-                        return;
-
-					}
-
-				errorMsg = "账号已经登录,是否登录?";
-
-				account = true;
-
-			}
+            }
 
         }
 
@@ -166,9 +139,9 @@ public class TuserControllers {
 
             user.setLocaip(locaip);
 
-            json.element("booe", true);
+			System.out.println(locaip);
 
-			application.setAttribute(user.getUserName(),user);
+            json.element("booe", true);
 
 			session.setAttribute(user.getUserName(), user);
 
