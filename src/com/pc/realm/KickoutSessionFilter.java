@@ -1,6 +1,6 @@
 package com.pc.realm;
 
-import com.pc.model.Tuser;
+
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.web.filter.AccessControlFilter;
@@ -8,12 +8,10 @@ import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.DefaultSessionKey;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.servlet.ShiroFilter;
 import org.apache.shiro.web.util.WebUtils;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -107,15 +105,15 @@ public class KickoutSessionFilter extends AccessControlFilter {
         if (session.getAttribute("kickout") != null) {
             //会话被踢出了
             try {
+                //清空缓存
                 subject.logout();
             } catch (Exception e) { //ignore
             }
             saveRequest(servletRequest);
-
+            //获得请求对象
             HttpServletRequest httpRequest = WebUtils.toHttp(servletRequest);
             if (isAjax(httpRequest)) {
-                HttpServletResponse httpServletResponse = WebUtils.toHttp(servletResponse);
-                httpServletResponse.sendError(HttpServletResponse.SC_CONTINUE);
+                WebUtils.toHttp(servletResponse).sendError(401);
                 return false;
             } else {
                 WebUtils.issueRedirect(servletRequest, servletResponse, kickoutUrl);
@@ -130,7 +128,7 @@ public class KickoutSessionFilter extends AccessControlFilter {
      * @return
      */
     boolean isAjax(HttpServletRequest request){
-        return  (request.getHeader("X-Requested-With") != null  && "XMLHttpRequest".equals( request.getHeader("X-Requested-With").toString())   ) ;
+        return  (request.getHeader("X-Requested-With") != null  && "XMLHttpRequest".equals( request.getHeader("X-Requested-With").toString())) ;
     }
 
 }

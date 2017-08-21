@@ -12,6 +12,7 @@
 <script src="js/jquery-3.2.0.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script type="text/javascript">
+
     $(function () {
         var userName = window.location.href;
 
@@ -32,12 +33,13 @@
                     if (data.booe) {
                         $("#userName").append("<h2>欢迎" + data.user.userName + "登录!</h2>")
                     } else {
-
                     }
 
                 },
                 error: function (e) {
-                    alert("错误！！");
+                    if(e.status ==401){
+                        window.location.href="logi.html?kickout=1";
+                    }
                 }
             });
 

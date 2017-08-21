@@ -139,8 +139,6 @@ public class TuserControllers {
 
             user.setLocaip(locaip);
 
-			System.out.println(locaip);
-
             json.element("booe", true);
 
 			session.setAttribute(user.getUserName(), user);

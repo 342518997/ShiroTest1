@@ -62,5 +62,20 @@
 	<script src="js/jquery-3.2.0.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/register.js"></script>
+	<script>
+		 var kickouts = window.location.href;
+
+		 var urls =  kickouts.split("?");
+
+			if(urls[1] != null){
+
+			    var kickout = urls[1].split("=")[1];
+
+			    if(kickout==1){
+			        alert("账号在别处登录!");
+				}
+			}
+
+	</script>
 </body>
 </html>
