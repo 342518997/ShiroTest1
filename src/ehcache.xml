@@ -20,22 +20,19 @@
 
     <!-- 登录记录缓存 锁定10分钟 -->
     <cache name="passwordRetryCache" eternal="false"
-           timeToIdleSeconds="3600"
-           timeToLiveSeconds="0"
+           timeToIdleSeconds="600"
            overflowToDisk="false"
            statistics="true">
     </cache>
     <!-- 授权缓存 有效10分钟 -->
     <cache name="authorization" eternal="false"
-           timeToIdleSeconds="3600"
-           timeToLiveSeconds="0"
+           timeToIdleSeconds="600"
            overflowToDisk="false"
            statistics="true">
     </cache>
     <!-- 登录缓存 有效10分钟 -->
     <cache name="loginCache" eternal="false"
-           timeToIdleSeconds="3600"
-           timeToLiveSeconds="0"
+           timeToIdleSeconds="60"
            overflowToDisk="false"
            statistics="true">
     </cache>
